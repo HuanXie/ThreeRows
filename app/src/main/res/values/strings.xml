@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ThreeRows</string>
+    <string name="vs">vs</string>
+    <string name="daddy">Daddy</string>
+    <string name="alien">Alien</string>
+
+    <!--contentDescription-->
+    <string name="headIcon">headicon</string>
+    <string name="boardCellBackgroundImage">boardCell</string>
+</resources>

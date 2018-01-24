@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">三子棋</string>
+    <string name="vs">vs</string>
+    <string name="daddy">爸爸</string>
+    <string name="alien">外星人</string>
+
+    <!--contentDescription-->
+    <string name="headIcon">headicon</string>
+    <string name="boardCellBackgroundImage">boardCell</string>
+
+</resources>
