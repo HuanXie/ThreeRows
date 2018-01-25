@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import com.example.huaxie.threerows.GameActivity
 import com.example.huaxie.threerows.R
 
@@ -29,22 +30,57 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val pieceImage: ImageView = itemView.findViewById(R.id.pieceHolder)
         fun bind(position: Int) = with(itemView) {
-//            pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
-            setOnClickListener(MyFirstThreeStepsOnclickListener(pieceImage, context))
+            setOnClickListener(MyFirstThreeStepsOnclickListener(pieceImage, context, position))
         }
     }
 
-    class MyFirstThreeStepsOnclickListener(val pieceImage: ImageView, val context: Context) : View.OnClickListener {
+    class MyFirstThreeStepsOnclickListener(val pieceImage: ImageView, val context: Context, val position: Int) : View.OnClickListener {
+        companion object {
+            private const val PLAYER_ONE = 1
+            private const val PLAYER_TWO = 2
+        }
         override fun onClick(v: View?) {
-            if (GameActivity.isPlayOneEnabled()) {
-                pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
-                GameActivity.enablePlayerTwo()
-                return
-            } else {
-                pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_smile))
-                GameActivity.enablePlayerOne()
-                return
+            if (GameActivity.piecesUsedOut){
+                if (GameActivity.isPlayOneEnabled() && pieceImage.drawable != null
+                        && GameActivity.piecesPositons[position] == PLAYER_ONE ){
+                    pieceImage.setImageDrawable(null)
+                    GameActivity.piecesUsedOut = false
+                    GameActivity.remainingPiecesForPlayOne++
+                    return
+                }
+
+                if (!GameActivity.isPlayOneEnabled() && pieceImage.drawable != null
+                        && GameActivity.piecesPositons[position] == PLAYER_TWO ){
+                    pieceImage.setImageDrawable(null)
+                    GameActivity.piecesUsedOut = false
+                    GameActivity.remainingPiecesForPlayTwo++
+                    return
+                }
             }
+            if (pieceImage.drawable == null && !GameActivity.piecesUsedOut) {
+                if (GameActivity.isPlayOneEnabled() && GameActivity.remainingPiecesForPlayOne > 0 ) {
+                    pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
+                    GameActivity.piecesPositons[position] = PLAYER_ONE
+                    GameActivity.remainingPiecesForPlayOne--
+                    GameActivity.enablePlayerTwo()
+                    return
+                } else {
+                    if (GameActivity.remainingPiecesForPlayTwo > 0) {
+                        pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_smile))
+                        GameActivity.remainingPiecesForPlayTwo--
+                        GameActivity.piecesPositons[position] = PLAYER_TWO
+                        if (GameActivity.remainingPiecesForPlayTwo == 0) {
+                            GameActivity.piecesUsedOut = true
+                            Toast.makeText(context,"请选中你想要移动的棋子，再移动到下一个位置", Toast.LENGTH_SHORT).show()
+                        }
+                        GameActivity.enablePlayerOne()
+                    }
+                    return
+                }
+            } else {
+                Toast.makeText(context,"piece can not overlap each other", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
     }
