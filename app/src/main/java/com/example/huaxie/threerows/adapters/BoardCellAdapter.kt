@@ -57,11 +57,15 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
                     return
                 }
             }
-            if (pieceImage.drawable == null && !GameActivity.piecesUsedOut) {
+            if (pieceImage.drawable == null && !GameActivity.piecesUsedOutOne) {
                 if (GameActivity.isPlayOneEnabled() && GameActivity.remainingPiecesForPlayOne > 0 ) {
                     pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
                     GameActivity.piecesPositons[position] = PLAYER_ONE
                     GameActivity.remainingPiecesForPlayOne--
+                    if (GameActivity.remainingPiecesForPlayOne == 0) {
+                        GameActivity.piecesUsedOutOne = true
+                        Toast.makeText(context,"请选中你想要移动的棋子，再移动到下一个位置", Toast.LENGTH_SHORT).show()
+                    }
                     GameActivity.enablePlayerTwo()
                     return
                 } else {
