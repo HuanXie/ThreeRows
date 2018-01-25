@@ -16,5 +16,35 @@ class GameActivity : AppCompatActivity() {
         val numberOfColumns = 3
         recyclerViewGameBoard.layoutManager = GridLayoutManager(this, numberOfColumns)
         recyclerViewGameBoard.adapter = BoardCellAdapter.newInstance()
+        startGame()
     }
+
+    companion object {
+        private var playerSwitcher: Boolean = false
+
+        fun isPlayOneEnabled() : Boolean {
+            return playerSwitcher
+        }
+
+        fun enablePlayerOne() {
+            playerSwitcher = true
+            //todo set background of play1 to enable, disable background of play2
+        }
+
+        fun enablePlayerTwo() {
+            playerSwitcher = false
+            //todo set background of play2 to enable, disable background of play1
+        }
+    }
+
+    private fun startGame() {
+        enablePlayerOne()
+    }
+
+
+
+
+
+
+
 }

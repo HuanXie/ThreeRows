@@ -1,10 +1,12 @@
 package com.example.huaxie.threerows.adapters
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.example.huaxie.threerows.GameActivity
 import com.example.huaxie.threerows.R
 
 class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
@@ -28,10 +30,23 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
         val pieceImage: ImageView = itemView.findViewById(R.id.pieceHolder)
         fun bind(position: Int) = with(itemView) {
 //            pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
-            setOnClickListener({
-//                pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_smile))
-            })
+            setOnClickListener(MyFirstThreeStepsOnclickListener(pieceImage, context))
         }
+    }
+
+    class MyFirstThreeStepsOnclickListener(val pieceImage: ImageView, val context: Context) : View.OnClickListener {
+        override fun onClick(v: View?) {
+            if (GameActivity.isPlayOneEnabled()) {
+                pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
+                GameActivity.enablePlayerTwo()
+                return
+            } else {
+                pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_smile))
+                GameActivity.enablePlayerOne()
+                return
+            }
+        }
+
     }
 
 }
