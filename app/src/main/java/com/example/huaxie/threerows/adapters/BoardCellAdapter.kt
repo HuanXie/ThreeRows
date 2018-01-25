@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import com.example.huaxie.threerows.R
-import kotlinx.android.synthetic.main.board_cell_view.view.*
 
 class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
 
@@ -27,10 +25,12 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val backgroundImage: ImageView = itemView.findViewById(R.id.pieceHolderBackgroundImage)
-        val pieceImage: ImageView = itemView.findViewById(R.id.pieceHolderBackgroundImage)
+        val pieceImage: ImageView = itemView.findViewById(R.id.pieceHolder)
         fun bind(position: Int) = with(itemView) {
-            (test as TextView).text = position.toString()
+//            pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
+            setOnClickListener({
+//                pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_smile))
+            })
         }
     }
 
