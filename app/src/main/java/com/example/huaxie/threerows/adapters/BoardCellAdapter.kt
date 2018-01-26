@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.huaxie.threerows.GameActivity
+import com.example.huaxie.threerows.NO_PLAYER
+import com.example.huaxie.threerows.PLAYER_ONE
+import com.example.huaxie.threerows.PLAYER_TWO
 import com.example.huaxie.threerows.R
 
 class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
@@ -35,14 +38,10 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
     }
 
     class MyFirstThreeStepsOnclickListener(val pieceImage: ImageView, val context: Context, val position: Int) : View.OnClickListener {
-        companion object {
-            private const val PLAYER_ONE = 1
-            private const val PLAYER_TWO = 2
-        }
+
         override fun onClick(v: View?) {
             if (!GameActivity.hasPiecesUsedOut()) {  // either player has some unused pieces
                 if (pieceImage.drawable != null) {
-                    Toast.makeText(context,"piece can not overlap each other", Toast.LENGTH_SHORT).show()
                     return
                 }
                 if (GameActivity.isPlayOneEnabled() && GameActivity.playerOne.remainingPieces > 0 ) {
@@ -51,7 +50,10 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
                     GameActivity.playerOne.remainingPieces--
                     if (GameActivity.playerOne.remainingPieces == 0) {
                         GameActivity.playerOne.piecesUsedOut = true
-                        Toast.makeText(context,"Player One 的棋子用完了, 下一轮请选中你想要移动的棋子，再移动到下一个位置", Toast.LENGTH_SHORT).show()
+                        if (GameActivity.checkWinner(isPlayerOne = true)) {
+                            Toast.makeText(context, "Play ONE WIN!!!", Toast.LENGTH_SHORT).show()
+//                            endGame()
+                        }
                     }
                     GameActivity.enablePlayerTwo()
                     GameActivity.disablePlayerOne()
@@ -62,25 +64,29 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
                     GameActivity.piecesPositons[position] = PLAYER_TWO
                     if (GameActivity.playerTwo.remainingPieces == 0) {
                         GameActivity.playerTwo.piecesUsedOut = true
-                        Toast.makeText(context,"Player Two 的棋子用完了，请选中你想要移动的棋子，再移动到下一个位置", Toast.LENGTH_SHORT).show()
+                        if (GameActivity.checkWinner(isPlayerOne = false)) {
+                            Toast.makeText(context, "Play TWO WIN!!!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     GameActivity.enablePlayerOne()
                     GameActivity.disablePlayerTwo()
                     return
                 }
             } else {   // all the pieces are on the board, click event only remove the Drawable
-                if (GameActivity.isPlayOneEnabled() && pieceImage.drawable != null
+                if (GameActivity.playerOne.isEnabled && pieceImage.drawable != null
                         && GameActivity.piecesPositons[position] == PLAYER_ONE ){
                     pieceImage.setImageDrawable(null)
+                    GameActivity.piecesPositons[position] = NO_PLAYER
                     GameActivity.playerOne.piecesUsedOut = false
                     GameActivity.playerOne.remainingPieces++
                     return
                 }
 
-                if (GameActivity.isPlayTwoEnabled() && pieceImage.drawable != null
+                if (GameActivity.playerTwo.isEnabled && pieceImage.drawable != null
                         && GameActivity.piecesPositons[position] == PLAYER_TWO ){
                     pieceImage.setImageDrawable(null)
                     GameActivity.playerTwo.piecesUsedOut = false
+                    GameActivity.piecesPositons[position] = NO_PLAYER
                     GameActivity.playerTwo.remainingPieces++
                     return
                 }
