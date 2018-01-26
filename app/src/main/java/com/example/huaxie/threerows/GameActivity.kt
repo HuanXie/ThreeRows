@@ -21,9 +21,9 @@ class GameActivity : AppCompatActivity() {
 
     companion object {
         private var playerSwitcher: Boolean = false
-        var piecesUsedOutOne: Boolean = false
+
         var piecesUsedOutTwo: Boolean = false
-        var remainingPiecesForPlayOne: Int = 3
+
         var remainingPiecesForPlayTwo: Int = 3
         var piecesPositons : ArrayList<Int> = arrayListOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
 
