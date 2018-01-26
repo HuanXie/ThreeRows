@@ -1,6 +1,8 @@
 package com.example.huaxie.threerows
 
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import com.example.huaxie.threerows.adapters.BoardCellAdapter
@@ -17,7 +19,7 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
         val numberOfColumns = 3
         recyclerViewGameBoard.layoutManager = GridLayoutManager(this, numberOfColumns)
-        recyclerViewGameBoard.adapter = BoardCellAdapter.newInstance()
+        recyclerViewGameBoard.adapter = BoardCellAdapter.newInstance(this)
         startGame()
     }
 
@@ -75,31 +77,53 @@ class GameActivity : AppCompatActivity() {
                 WINNING_POSITION_8)
 
 
-        fun checkWinner(isPlayerOne: Boolean) : Boolean{
-            val playerPositions : Set<Int> = getPlayerPositions(isPlayerOne)
-            if (ALL_WINNING_POSITIONS.contains(playerPositions)) {
+        fun checkWinner(player: Player): Boolean{
+            if (ALL_WINNING_POSITIONS.contains(player.piecesPostions)) {
                 return true;
             }
             return false
         }
 
-        private fun getPlayerPositions(isPlayerOne : Boolean): Set<Int> {
-            val positions : MutableSet<Int> = LinkedHashSet()
-            piecesPositons.forEachIndexed({index, value -> when (Pair(value, isPlayerOne)) {
-                Pair(PLAYER_ONE, true) -> {
-                    positions.add(index)
-                }
-                Pair(PLAYER_TWO, false) -> {
-                    positions.add(index)
-                }
-            }})
+        fun endGame(Winner : Int) {
+            playerOne.apply {
+                isEnabled = false
+                piecesUsedOut = false
+                remainingPieces = 3
+            }
+            playerTwo.apply {
+                isEnabled = false
+                piecesUsedOut = false
+                remainingPieces = 3
+            }
 
-            return positions
         }
+
+//        private fun getPlayerPositions(isPlayerOne : Boolean): Set<Int> {
+//            val positions : MutableSet<Int> = LinkedHashSet()
+//            piecesPositons.forEachIndexed({index, value -> when (Pair(value, isPlayerOne)) {
+//                Pair(PLAYER_ONE, true) -> {
+//                    positions.add(index)
+//                }
+//                Pair(PLAYER_TWO, false) -> {
+//                    positions.add(index)
+//                }
+//            }})
+//            return positions
+//        }
     }
 
     private fun startGame() {
         enablePlayerOne()
     }
+
+    fun highLightPieces(player: Player) {
+        for (position in player.piecesPostions) {
+            val viewHolder: BoardCellAdapter.ViewHolder =
+                    recyclerViewGameBoard.findViewHolderForAdapterPosition(position) as BoardCellAdapter.ViewHolder
+            viewHolder.pieceImage.drawable.setColorFilter(ContextCompat.getColor(this,R.color.gold), PorterDuff.Mode.SRC_IN)
+        }
+    }
+
+
 
 }

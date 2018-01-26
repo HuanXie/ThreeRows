@@ -11,14 +11,17 @@ import com.example.huaxie.threerows.GameActivity
 import com.example.huaxie.threerows.NO_PLAYER
 import com.example.huaxie.threerows.PLAYER_ONE
 import com.example.huaxie.threerows.PLAYER_TWO
+import com.example.huaxie.threerows.Player
 import com.example.huaxie.threerows.R
 
-class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
+class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
+    fun test() {}
+
 
     companion object {
         private val positions: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
-        fun newInstance() : BoardCellAdapter = BoardCellAdapter()
+        fun newInstance(gameActivity: GameActivity): BoardCellAdapter = BoardCellAdapter(gameActivity)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
@@ -33,11 +36,11 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val pieceImage: ImageView = itemView.findViewById(R.id.pieceHolder)
         fun bind(position: Int) = with(itemView) {
-            setOnClickListener(MyFirstThreeStepsOnclickListener(pieceImage, context, position))
+            setOnClickListener(MyOnclickListener(pieceImage, context, position))
         }
     }
 
-    class MyFirstThreeStepsOnclickListener(val pieceImage: ImageView, val context: Context, val position: Int) : View.OnClickListener {
+    inner class MyOnclickListener(val pieceImage: ImageView, val context: Context, val position: Int) : View.OnClickListener {
 
         override fun onClick(v: View?) {
             if (!GameActivity.hasPiecesUsedOut()) {  // either player has some unused pieces
@@ -47,12 +50,14 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
                 if (GameActivity.isPlayOneEnabled() && GameActivity.playerOne.remainingPieces > 0 ) {
                     pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
                     GameActivity.piecesPositons[position] = PLAYER_ONE
+                    GameActivity.playerOne.piecesPostions.add(position)
                     GameActivity.playerOne.remainingPieces--
                     if (GameActivity.playerOne.remainingPieces == 0) {
                         GameActivity.playerOne.piecesUsedOut = true
-                        if (GameActivity.checkWinner(isPlayerOne = true)) {
+                        if (GameActivity.checkWinner(GameActivity.playerOne)) {
                             Toast.makeText(context, "Play ONE WIN!!!", Toast.LENGTH_SHORT).show()
-//                            endGame()
+                            lightOnImageForWinner(GameActivity.playerOne)
+//                            GameActivity.endGame(PLAYER_ONE)
                         }
                     }
                     GameActivity.enablePlayerTwo()
@@ -62,10 +67,13 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
                     pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_smile))
                     GameActivity.playerTwo.remainingPieces--
                     GameActivity.piecesPositons[position] = PLAYER_TWO
+                    GameActivity.playerTwo.piecesPostions.add(position)
                     if (GameActivity.playerTwo.remainingPieces == 0) {
                         GameActivity.playerTwo.piecesUsedOut = true
-                        if (GameActivity.checkWinner(isPlayerOne = false)) {
+                        if (GameActivity.checkWinner(GameActivity.playerOne)) {
                             Toast.makeText(context, "Play TWO WIN!!!", Toast.LENGTH_SHORT).show()
+//                            GameActivity.endGame(PLAYER_TWO)
+                            lightOnImageForWinner(GameActivity.playerTwo)
                         }
                     }
                     GameActivity.enablePlayerOne()
@@ -77,6 +85,7 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
                         && GameActivity.piecesPositons[position] == PLAYER_ONE ){
                     pieceImage.setImageDrawable(null)
                     GameActivity.piecesPositons[position] = NO_PLAYER
+                    GameActivity.playerOne.piecesPostions.remove(position)
                     GameActivity.playerOne.piecesUsedOut = false
                     GameActivity.playerOne.remainingPieces++
                     return
@@ -87,11 +96,16 @@ class BoardCellAdapter : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
                     pieceImage.setImageDrawable(null)
                     GameActivity.playerTwo.piecesUsedOut = false
                     GameActivity.piecesPositons[position] = NO_PLAYER
+                    GameActivity.playerTwo.piecesPostions.remove(position)
                     GameActivity.playerTwo.remainingPieces++
                     return
                 }
 
             }
+        }
+
+        private fun lightOnImageForWinner(player: Player) {
+            activity.highLightPieces(player)
         }
 
     }
