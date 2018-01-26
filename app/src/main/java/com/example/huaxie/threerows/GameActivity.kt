@@ -20,40 +20,45 @@ class GameActivity : AppCompatActivity() {
     }
 
     companion object {
-        private var playerSwitcher: Boolean = false
-
-        var piecesUsedOutTwo: Boolean = false
-
-        var remainingPiecesForPlayTwo: Int = 3
+        val playerOne = Player.newInstance(R.drawable.icon_star)
+        val playerTwo = Player.newInstance(R.drawable.icon_smile)
         var piecesPositons : ArrayList<Int> = arrayListOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
 
         fun isPlayOneEnabled() : Boolean {
-            return playerSwitcher
+            return playerOne.isEnabled
+        }
+
+        fun isPlayTwoEnabled() : Boolean {
+            return playerTwo.isEnabled
         }
 
         fun hasPiecesUsedOut() : Boolean{
-            return piecesUsedOutOne && piecesUsedOutTwo
+            return playerOne.piecesUsedOut && playerTwo.piecesUsedOut
         }
 
         fun enablePlayerOne() {
-            playerSwitcher = true
+            playerOne.isEnabled = true
             //todo set background of play1 to enable, disable background of play2
         }
 
         fun enablePlayerTwo() {
-            playerSwitcher = false
+            playerTwo.isEnabled = true
             //todo set background of play2 to enable, disable background of play1
+        }
+
+        fun disablePlayerOne() {
+            playerOne.isEnabled = false
+            //todo set background of play1 to enable, disable background of play2
+        }
+
+        fun disablePlayerTwo() {
+            playerTwo.isEnabled = false
+            //todo set background of play1 to enable, disable background of play2
         }
     }
 
     private fun startGame() {
         enablePlayerOne()
     }
-
-
-
-
-
-
 
 }
