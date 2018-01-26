@@ -2,5 +2,5 @@
 <resources>
     <dimen name="sub_header_text_size">24sp</dimen>
     <dimen name="header_text_size">32sp</dimen>
-    <dimen name="piece_icon_size_small">50dp</dimen>
+    <dimen name="piece_icon_size_small">60dp</dimen>
 </resources>

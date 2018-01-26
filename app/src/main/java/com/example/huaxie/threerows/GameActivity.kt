@@ -25,7 +25,7 @@ class GameActivity : AppCompatActivity() {
 
     companion object {
         val playerOne = Player.newInstance(R.drawable.icon_star)
-        val playerTwo = Player.newInstance(R.drawable.icon_smile)
+        val playerTwo = Player.newInstance(R.drawable.icon_circle)
         var playerOnePositions : ArrayList<Int> = arrayListOf(-1, -1, -1)
         var playerTwoPositions : ArrayList<Int> = arrayListOf(-1, -1, -1)
         var piecesPositons : ArrayList<Int> = arrayListOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -84,36 +84,27 @@ class GameActivity : AppCompatActivity() {
             return false
         }
 
-        fun endGame(Winner : Int) {
-            playerOne.apply {
-                isEnabled = false
-                piecesUsedOut = false
-                remainingPieces = 3
-            }
-            playerTwo.apply {
-                isEnabled = false
-                piecesUsedOut = false
-                remainingPieces = 3
-            }
 
-        }
 
-//        private fun getPlayerPositions(isPlayerOne : Boolean): Set<Int> {
-//            val positions : MutableSet<Int> = LinkedHashSet()
-//            piecesPositons.forEachIndexed({index, value -> when (Pair(value, isPlayerOne)) {
-//                Pair(PLAYER_ONE, true) -> {
-//                    positions.add(index)
-//                }
-//                Pair(PLAYER_TWO, false) -> {
-//                    positions.add(index)
-//                }
-//            }})
-//            return positions
-//        }
     }
 
     private fun startGame() {
         enablePlayerOne()
+    }
+
+    fun endGame() {
+        clearBoard()
+        playerOne.apply {
+            isEnabled = false
+            piecesUsedOut = false
+            remainingPieces = 3
+        }
+        playerTwo.apply {
+            isEnabled = false
+            piecesUsedOut = false
+            remainingPieces = 3
+        }
+
     }
 
     fun highLightPieces(player: Player) {
@@ -124,6 +115,29 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    fun removePiecesOutsideBoard(playerNumber: Int, remainingPieces: Int) {
+        if (playerNumber == PLAYER_ONE) {
+            when( 3 - remainingPieces) {
+                1 -> playerOneImage1.setImageDrawable(null)
+                2 -> playerOneImage2.setImageDrawable(null)
+                3 -> playerOneImage3.setImageDrawable(null)
+            }
+        }
+        if (playerNumber == PLAYER_TWO) {
+            when( 3 - remainingPieces) {
+                1 -> playerTwoImage3.setImageDrawable(null)
+                2 -> playerTwoImage2.setImageDrawable(null)
+                3 -> playerTwoImage1.setImageDrawable(null)
+            }
+        }
+    }
+
+    fun clearBoard() {
+        for (position in 1..recyclerViewGameBoard.adapter.itemCount){
+            (recyclerViewGameBoard.findViewHolderForAdapterPosition(position - 1)
+                    as BoardCellAdapter.ViewHolder).pieceImage.setImageDrawable(null)
+        }
+    }
 
 
 }

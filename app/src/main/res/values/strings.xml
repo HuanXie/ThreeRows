@@ -7,5 +7,6 @@
 
     <!--contentDescription-->
     <string name="headIcon">headicon</string>
+    <string name="pieceImage">pieceImage</string>
     <string name="boardCellBackgroundImage">boardCell</string>
 </resources>

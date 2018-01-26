@@ -52,28 +52,30 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
                     GameActivity.piecesPositons[position] = PLAYER_ONE
                     GameActivity.playerOne.piecesPostions.add(position)
                     GameActivity.playerOne.remainingPieces--
+                    activity.removePiecesOutsideBoard(PLAYER_ONE, GameActivity.playerOne.remainingPieces)
                     if (GameActivity.playerOne.remainingPieces == 0) {
                         GameActivity.playerOne.piecesUsedOut = true
                         if (GameActivity.checkWinner(GameActivity.playerOne)) {
                             Toast.makeText(context, "Play ONE WIN!!!", Toast.LENGTH_SHORT).show()
                             lightOnImageForWinner(GameActivity.playerOne)
-//                            GameActivity.endGame(PLAYER_ONE)
+//                            activity.endGame()
                         }
                     }
                     GameActivity.enablePlayerTwo()
                     GameActivity.disablePlayerOne()
                     return
                 } else if (GameActivity.isPlayTwoEnabled() && GameActivity.playerTwo.remainingPieces > 0) {
-                    pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_smile))
+                    pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_circle))
                     GameActivity.playerTwo.remainingPieces--
+                    activity.removePiecesOutsideBoard(PLAYER_TWO, GameActivity.playerTwo.remainingPieces)
                     GameActivity.piecesPositons[position] = PLAYER_TWO
                     GameActivity.playerTwo.piecesPostions.add(position)
                     if (GameActivity.playerTwo.remainingPieces == 0) {
                         GameActivity.playerTwo.piecesUsedOut = true
-                        if (GameActivity.checkWinner(GameActivity.playerOne)) {
+                        if (GameActivity.checkWinner(GameActivity.playerTwo)) {
                             Toast.makeText(context, "Play TWO WIN!!!", Toast.LENGTH_SHORT).show()
-//                            GameActivity.endGame(PLAYER_TWO)
                             lightOnImageForWinner(GameActivity.playerTwo)
+//                            activity.endGame()
                         }
                     }
                     GameActivity.enablePlayerOne()
