@@ -1,12 +1,15 @@
 package com.example.huaxie.threerows
 
+import android.animation.ObjectAnimator
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.view.View
 import com.example.huaxie.threerows.adapters.BoardCellAdapter
 import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.android.synthetic.main.cover_splash.*
 
 
 const val PLAYER_ONE = 1
@@ -139,5 +142,20 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    fun showCoverSplash(){
+        coverSplashContainer?.let {
+            it.visibility = View.VISIBLE
+            coverSplashLayout?.apply {
+                it.alpha = 0f
+                startFadeInAnimator(it)
+            }
+        }
+    }
 
+
+    fun startFadeInAnimator(view: View) {
+        val fadeInAnimator = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
+        fadeInAnimator.duration = 1000.toLong()
+        fadeInAnimator.startDelay = 3000
+    }
 }

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#26A69A</color>
     <color name="colorPrimaryDark">#1A736B</color>
     <color name="colorAccent">#591E03</color>
+    <color name="coverBackground">#80000000</color>
     <color name="white">#FFFFFF</color>
     <color name="gold">#FFD700</color>
 

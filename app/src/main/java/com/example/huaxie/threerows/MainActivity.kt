@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        headIconPeppaPig.setOnClickListener {
+        playButton.setOnClickListener {
             startGameActivity()
         }
     }
@@ -19,8 +19,6 @@ class MainActivity : AppCompatActivity() {
     private fun startGameActivity() {
         val intent = Intent(
                 this,GameActivity::class.java)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent
-//                .FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 

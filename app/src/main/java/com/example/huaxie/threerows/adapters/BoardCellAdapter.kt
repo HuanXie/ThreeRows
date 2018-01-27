@@ -56,9 +56,10 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
                     if (GameActivity.playerOne.remainingPieces == 0) {
                         GameActivity.playerOne.piecesUsedOut = true
                         if (GameActivity.checkWinner(GameActivity.playerOne)) {
-                            Toast.makeText(context, "Play ONE WIN!!!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Player ONE WIN!!!", Toast.LENGTH_SHORT).show()
                             lightOnImageForWinner(GameActivity.playerOne)
-//                            activity.endGame()
+                            activity.showCoverSplash()
+                            activity.endGame()
                         }
                     }
                     GameActivity.enablePlayerTwo()
@@ -73,9 +74,10 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
                     if (GameActivity.playerTwo.remainingPieces == 0) {
                         GameActivity.playerTwo.piecesUsedOut = true
                         if (GameActivity.checkWinner(GameActivity.playerTwo)) {
-                            Toast.makeText(context, "Play TWO WIN!!!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Player TWO WIN!!!", Toast.LENGTH_SHORT).show()
                             lightOnImageForWinner(GameActivity.playerTwo)
-//                            activity.endGame()
+                            activity.showCoverSplash()
+                            activity.endGame()
                         }
                     }
                     GameActivity.enablePlayerOne()
