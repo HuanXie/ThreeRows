@@ -80,6 +80,12 @@ class GameActivity : AppCompatActivity() {
 
     private fun startGame() {
         enablePlayerOne()
+        playerTwoImage1.setImageDrawable(getDrawable(playerTwo.imageId))
+        playerTwoImage2.setImageDrawable(getDrawable(playerTwo.imageId))
+        playerTwoImage3.setImageDrawable(getDrawable(playerTwo.imageId))
+        playerOneImage1.setImageDrawable(getDrawable(playerOne.imageId))
+        playerOneImage2.setImageDrawable(getDrawable(playerOne.imageId))
+        playerOneImage3.setImageDrawable(getDrawable(playerOne.imageId))
     }
 
     fun endGame() {
@@ -88,11 +94,13 @@ class GameActivity : AppCompatActivity() {
             isEnabled = false
             piecesUsedOut = false
             remainingPieces = 3
+            piecesPostions.clear()
         }
         playerTwo.apply {
             isEnabled = false
             piecesUsedOut = false
             remainingPieces = 3
+            piecesPostions.clear()
         }
     }
 
@@ -131,8 +139,15 @@ class GameActivity : AppCompatActivity() {
         coverSplashContainer?.let {
             it.visibility = View.VISIBLE
             coverSplashLayout?.apply {
+                it.visibility = View.VISIBLE
                 it.alpha = 0f
                 startFadeInAnimator(it)
+                playAgainButton?.setOnClickListener({
+                    endGame()
+//                    startFadeOutAnimator(it)
+                    this.visibility = View.GONE
+                    startGame()
+                })
             }
         }
     }
@@ -141,7 +156,12 @@ class GameActivity : AppCompatActivity() {
         val fadeInAnimator = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
         fadeInAnimator.duration = ANIMATION_DURATION
         fadeInAnimator.start()
+    }
 
+    private fun startFadeOutAnimator(view: View) {
+        val fadeOutAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f)
+        fadeOutAnimator.duration = ANIMATION_DURATION
+        fadeOutAnimator.start()
     }
 
 //    private fun startCircularRevealAnimation(view: View) {
