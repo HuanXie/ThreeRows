@@ -27,10 +27,10 @@ class GameActivity : AppCompatActivity() {
     }
 
     companion object {
-        val playerOne = Player.newInstance(R.drawable.icon_star)
-        val playerTwo = Player.newInstance(R.drawable.icon_circle)
+        val playerOne = Player.newInstance(R.drawable.icon_star, PLAYER_ONE)
+        val playerTwo = Player.newInstance(R.drawable.icon_circle, PLAYER_TWO)
         private const val ANIMATION_DURATION: Long = 1000
-        private const val ANIMATION_DELAY: Long = 3000
+        const val ANIMATION_DELAY: Long = 1000
         var piecesPositons : ArrayList<Int> = arrayListOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
         private val WINNING_POSITION_1 = hashSetOf(0, 1, 2)
         private val WINNING_POSITION_2 = hashSetOf(3, 4, 5)
@@ -140,8 +140,15 @@ class GameActivity : AppCompatActivity() {
     private fun startFadeInAnimator(view: View) {
         val fadeInAnimator = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
         fadeInAnimator.duration = ANIMATION_DURATION
-        fadeInAnimator.startDelay = ANIMATION_DELAY
+        fadeInAnimator.start()
+
     }
+
+//    private fun startCircularRevealAnimation(view: View) {
+//        val x = this.resources.displayMetrics.widthPixels / 2
+//        val y = this.resources.displayMetrics.heightPixels / 2
+//        AnimationUtil.showCircularReveal(x, y, view)
+//    }
 
     override fun onBackPressed() {
         super.onBackPressed()

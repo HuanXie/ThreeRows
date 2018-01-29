@@ -1,16 +1,15 @@
 package com.example.huaxie.threerows.adapters
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import com.example.huaxie.threerows.GameActivity
 import com.example.huaxie.threerows.NO_PLAYER
-import com.example.huaxie.threerows.PLAYER_ONE
-import com.example.huaxie.threerows.PLAYER_TWO
 import com.example.huaxie.threerows.Player
 import com.example.huaxie.threerows.R
 
@@ -18,7 +17,7 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
 
     companion object {
         private val positions: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
-
+        private val mMainThreadHandler = Handler(Looper.getMainLooper())
         fun newInstance(gameActivity: GameActivity): BoardCellAdapter = BoardCellAdapter(gameActivity)
     }
 
@@ -45,64 +44,64 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
                 if (pieceImage.drawable != null) {
                     return
                 }
-                if (GameActivity.playerOne.isEnabled && GameActivity.playerOne.remainingPieces > 0 ) {
-                    pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
-                    GameActivity.piecesPositons[position] = PLAYER_ONE
-                    GameActivity.playerOne.piecesPostions.add(position)
-                    GameActivity.playerOne.remainingPieces--
-                    activity.removePiecesOutsideBoard(PLAYER_ONE, GameActivity.playerOne.remainingPieces)
-                    if (GameActivity.playerOne.remainingPieces == 0) {
-                        GameActivity.playerOne.piecesUsedOut = true
-                        if (GameActivity.checkWinner(GameActivity.playerOne)) {
-                            Toast.makeText(context, "Player ONE WIN!!!", Toast.LENGTH_SHORT).show()
-                            lightOnImageForWinner(GameActivity.playerOne)
-                            activity.showCoverSplash()
-                            activity.endGame()
-                        }
+                GameActivity.playerOne.apply {
+                    if (isEnabled && remainingPieces > 0) {
+                        pieceAction()
+                        GameActivity.enablePlayerTwo()
+                        GameActivity.disablePlayerOne()
+                        return
                     }
-                    GameActivity.enablePlayerTwo()
-                    GameActivity.disablePlayerOne()
-                    return
-                } else if (GameActivity.playerTwo.isEnabled && GameActivity.playerTwo.remainingPieces > 0) {
-                    pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_circle))
-                    GameActivity.playerTwo.remainingPieces--
-                    activity.removePiecesOutsideBoard(PLAYER_TWO, GameActivity.playerTwo.remainingPieces)
-                    GameActivity.piecesPositons[position] = PLAYER_TWO
-                    GameActivity.playerTwo.piecesPostions.add(position)
-                    if (GameActivity.playerTwo.remainingPieces == 0) {
-                        GameActivity.playerTwo.piecesUsedOut = true
-                        if (GameActivity.checkWinner(GameActivity.playerTwo)) {
-                            Toast.makeText(context, "Player TWO WIN!!!", Toast.LENGTH_SHORT).show()
-                            lightOnImageForWinner(GameActivity.playerTwo)
-                            activity.showCoverSplash()
-                            activity.endGame()
-                        }
+                }
+                GameActivity.playerTwo.apply {
+                    if (isEnabled && remainingPieces > 0) {
+                        pieceAction()
+                        GameActivity.enablePlayerOne()
+                        GameActivity.disablePlayerTwo()
+                        return
                     }
-                    GameActivity.enablePlayerOne()
-                    GameActivity.disablePlayerTwo()
-                    return
                 }
             } else {   // all the pieces are on the board, click event only remove the Drawable
-                if (GameActivity.playerOne.isEnabled && pieceImage.drawable != null
-                        && GameActivity.piecesPositons[position] == PLAYER_ONE ){
-                    pieceImage.setImageDrawable(null)
-                    GameActivity.piecesPositons[position] = NO_PLAYER
-                    GameActivity.playerOne.piecesPostions.remove(position)
-                    GameActivity.playerOne.piecesUsedOut = false
-                    GameActivity.playerOne.remainingPieces++
-                    return
+                GameActivity.playerOne.apply {
+                    if (isEnabled && pieceImage.drawable != null
+                            && GameActivity.piecesPositons[position] == playerId ){
+                        pieceImage.setImageDrawable(null)
+                        GameActivity.piecesPositons[position] = NO_PLAYER
+                        piecesPostions.remove(position)
+                        piecesUsedOut = false
+                        remainingPieces++
+                        return
+                    }
                 }
 
-                if (GameActivity.playerTwo.isEnabled && pieceImage.drawable != null
-                        && GameActivity.piecesPositons[position] == PLAYER_TWO ){
-                    pieceImage.setImageDrawable(null)
-                    GameActivity.playerTwo.piecesUsedOut = false
-                    GameActivity.piecesPositons[position] = NO_PLAYER
-                    GameActivity.playerTwo.piecesPostions.remove(position)
-                    GameActivity.playerTwo.remainingPieces++
-                    return
+                GameActivity.playerTwo.apply {
+                    if (isEnabled && pieceImage.drawable != null
+                            && GameActivity.piecesPositons[position] == playerId ){
+                        pieceImage.setImageDrawable(null)
+                        piecesUsedOut = false
+                        GameActivity.piecesPositons[position] = NO_PLAYER
+                        piecesPostions.remove(position)
+                        remainingPieces++
+                        return
+                    }
                 }
+            }
+        }
 
+        private fun Player.pieceAction() {
+            pieceImage.setImageDrawable(context.getDrawable(imageId))
+            GameActivity.piecesPositons[position] = playerId
+            piecesPostions.add(position)
+            remainingPieces--
+            activity.removePiecesOutsideBoard(playerId, remainingPieces)
+            if (remainingPieces == 0) {
+                piecesUsedOut = true
+                if (GameActivity.checkWinner(this)) {
+                    lightOnImageForWinner(this)
+                    mMainThreadHandler.postDelayed({
+                        activity.showCoverSplash()
+                        activity.endGame()
+                    }, GameActivity.ANIMATION_DELAY)
+                }
             }
         }
 
