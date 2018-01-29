@@ -15,8 +15,6 @@ import com.example.huaxie.threerows.Player
 import com.example.huaxie.threerows.R
 
 class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardCellAdapter.ViewHolder>() {
-    fun test() {}
-
 
     companion object {
         private val positions: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
@@ -47,7 +45,7 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
                 if (pieceImage.drawable != null) {
                     return
                 }
-                if (GameActivity.isPlayOneEnabled() && GameActivity.playerOne.remainingPieces > 0 ) {
+                if (GameActivity.playerOne.isEnabled && GameActivity.playerOne.remainingPieces > 0 ) {
                     pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_star))
                     GameActivity.piecesPositons[position] = PLAYER_ONE
                     GameActivity.playerOne.piecesPostions.add(position)
@@ -65,7 +63,7 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
                     GameActivity.enablePlayerTwo()
                     GameActivity.disablePlayerOne()
                     return
-                } else if (GameActivity.isPlayTwoEnabled() && GameActivity.playerTwo.remainingPieces > 0) {
+                } else if (GameActivity.playerTwo.isEnabled && GameActivity.playerTwo.remainingPieces > 0) {
                     pieceImage.setImageDrawable(context.getDrawable(R.drawable.icon_circle))
                     GameActivity.playerTwo.remainingPieces--
                     activity.removePiecesOutsideBoard(PLAYER_TWO, GameActivity.playerTwo.remainingPieces)
@@ -111,7 +109,6 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
         private fun lightOnImageForWinner(player: Player) {
             activity.highLightPieces(player)
         }
-
     }
 
 }

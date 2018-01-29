@@ -29,17 +29,22 @@ class GameActivity : AppCompatActivity() {
     companion object {
         val playerOne = Player.newInstance(R.drawable.icon_star)
         val playerTwo = Player.newInstance(R.drawable.icon_circle)
-        var playerOnePositions : ArrayList<Int> = arrayListOf(-1, -1, -1)
-        var playerTwoPositions : ArrayList<Int> = arrayListOf(-1, -1, -1)
+        private const val ANIMATION_DURATION: Long = 1000
+        private const val ANIMATION_DELAY: Long = 3000
         var piecesPositons : ArrayList<Int> = arrayListOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
-
-        fun isPlayOneEnabled() : Boolean {
-            return playerOne.isEnabled
-        }
-
-        fun isPlayTwoEnabled() : Boolean {
-            return playerTwo.isEnabled
-        }
+        private val WINNING_POSITION_1 = hashSetOf(0, 1, 2)
+        private val WINNING_POSITION_2 = hashSetOf(3, 4, 5)
+        private val WINNING_POSITION_3 = hashSetOf(6, 7, 8)
+        private val WINNING_POSITION_4 = hashSetOf(0, 3, 6)
+        private val WINNING_POSITION_5 = hashSetOf(1, 4, 7)
+        private val WINNING_POSITION_6 = hashSetOf(2, 5, 8)
+        private val WINNING_POSITION_7 = hashSetOf(0, 4, 8)
+        private val WINNING_POSITION_8 = hashSetOf(2, 4, 6)
+        private val ALL_WINNING_POSITIONS = hashSetOf<Set<Int>>(WINNING_POSITION_1,
+                WINNING_POSITION_2, WINNING_POSITION_3,
+                WINNING_POSITION_4, WINNING_POSITION_5,
+                WINNING_POSITION_6, WINNING_POSITION_7,
+                WINNING_POSITION_8)
 
         fun hasPiecesUsedOut() : Boolean{
             return playerOne.piecesUsedOut && playerTwo.piecesUsedOut
@@ -65,30 +70,12 @@ class GameActivity : AppCompatActivity() {
             //todo set background of play1 to enable, disable background of play2
         }
 
-        private val WINNING_POSITION_1 = hashSetOf(0, 1, 2)
-        private val WINNING_POSITION_2 = hashSetOf(3, 4, 5)
-        private val WINNING_POSITION_3 = hashSetOf(6, 7, 8)
-        private val WINNING_POSITION_4 = hashSetOf(0, 3, 6)
-        private val WINNING_POSITION_5 = hashSetOf(1, 4, 7)
-        private val WINNING_POSITION_6 = hashSetOf(2, 5, 8)
-        private val WINNING_POSITION_7 = hashSetOf(0, 4, 8)
-        private val WINNING_POSITION_8 = hashSetOf(2, 4, 6)
-        private val ALL_WINNING_POSITIONS = hashSetOf<Set<Int>>(WINNING_POSITION_1,
-                WINNING_POSITION_2, WINNING_POSITION_3,
-                WINNING_POSITION_4, WINNING_POSITION_5,
-                WINNING_POSITION_6, WINNING_POSITION_7,
-                WINNING_POSITION_8)
-
-
         fun checkWinner(player: Player): Boolean{
             if (ALL_WINNING_POSITIONS.contains(player.piecesPostions)) {
                 return true;
             }
             return false
         }
-
-
-
     }
 
     private fun startGame() {
@@ -107,15 +94,13 @@ class GameActivity : AppCompatActivity() {
             piecesUsedOut = false
             remainingPieces = 3
         }
-
     }
 
     fun highLightPieces(player: Player) {
-        for (position in player.piecesPostions) {
-            val viewHolder: BoardCellAdapter.ViewHolder =
-                    recyclerViewGameBoard.findViewHolderForAdapterPosition(position) as BoardCellAdapter.ViewHolder
-            viewHolder.pieceImage.drawable.setColorFilter(ContextCompat.getColor(this,R.color.gold), PorterDuff.Mode.SRC_IN)
-        }
+        player.piecesPostions
+                .asSequence()
+                .map { recyclerViewGameBoard.findViewHolderForAdapterPosition(it) as BoardCellAdapter.ViewHolder }
+                .forEach { it.pieceImage.drawable.setColorFilter(ContextCompat.getColor(this,R.color.gold), PorterDuff.Mode.SRC_IN) }
     }
 
     fun removePiecesOutsideBoard(playerNumber: Int, remainingPieces: Int) {
@@ -135,7 +120,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun clearBoard() {
+    private fun clearBoard() {
         for (position in 1..recyclerViewGameBoard.adapter.itemCount){
             (recyclerViewGameBoard.findViewHolderForAdapterPosition(position - 1)
                     as BoardCellAdapter.ViewHolder).pieceImage.setImageDrawable(null)
@@ -152,10 +137,15 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-
-    fun startFadeInAnimator(view: View) {
+    private fun startFadeInAnimator(view: View) {
         val fadeInAnimator = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
-        fadeInAnimator.duration = 1000.toLong()
-        fadeInAnimator.startDelay = 3000
+        fadeInAnimator.duration = ANIMATION_DURATION
+        fadeInAnimator.startDelay = ANIMATION_DELAY
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        //todo see if the game is ongoing, then need to show the dialog
+        endGame()
     }
 }
