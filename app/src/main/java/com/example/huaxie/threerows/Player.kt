@@ -5,6 +5,7 @@ class Player private constructor(val imageId: Int, val playerId: Int) {
     var remainingPieces: Int = 3
     var isEnabled: Boolean = false
     var piecesPostions: MutableSet<Int> = HashSet()
+    var scores: Int = 0
 
     companion object {
         fun newInstance(imageId: Int, playerId: Int): Player {

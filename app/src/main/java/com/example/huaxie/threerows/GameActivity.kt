@@ -9,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.example.huaxie.threerows.adapters.BoardCellAdapter
 import kotlinx.android.synthetic.main.activity_game.*
-import kotlinx.android.synthetic.main.activity_game.coverSplashLayout
 import kotlinx.android.synthetic.main.cover_splash.*
 
 
@@ -81,6 +80,7 @@ class GameActivity : AppCompatActivity() {
 
     private fun startGame() {
         enablePlayerOne()
+        updateScores()
         playerTwoImage1.setImageDrawable(getDrawable(playerTwo.imageId))
         playerTwoImage2.setImageDrawable(getDrawable(playerTwo.imageId))
         playerTwoImage3.setImageDrawable(getDrawable(playerTwo.imageId))
@@ -103,6 +103,11 @@ class GameActivity : AppCompatActivity() {
             remainingPieces = 3
             piecesPostions.clear()
         }
+    }
+
+    fun updateScores() {
+        playerOneScores.text = playerOne.scores.toString()
+        playerTwoScores.text = playerTwo.scores.toString()
     }
 
     fun highLightPieces(player: Player) {
@@ -135,24 +140,6 @@ class GameActivity : AppCompatActivity() {
                     as BoardCellAdapter.ViewHolder).pieceImage.setImageDrawable(null)
         }
     }
-
-//    fun showCoverSplash(){
-//        coverSplashContainer?.let {
-//            it.visibility = View.VISIBLE
-//            coverSplashLayout?.apply {
-////                it.visibility = View.VISIBLE
-////                it.alpha = 0f
-////                startFadeInAnimator(it)
-//                playAgainButton?.setOnClickListener({
-////                    endGame()
-////                    startFadeOutAnimator(it)
-//                    this.visibility = View.GONE
-//                    coverSplashLayout.visibility = View.GONE
-//                    startGame()
-//                })
-//            }
-//        }
-//    }
 
     fun showCoverSplash(){
         coverSplashLayout.let {

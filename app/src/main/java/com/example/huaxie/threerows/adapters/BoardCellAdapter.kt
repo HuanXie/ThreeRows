@@ -97,7 +97,9 @@ class BoardCellAdapter(val activity: GameActivity) : RecyclerView.Adapter<BoardC
                 piecesUsedOut = true
                 if (GameActivity.checkWinner(this)) {
                     lightOnImageForWinner(this)
+                    scores++
                     mMainThreadHandler.postDelayed({
+                        activity.updateScores()
                         activity.showCoverSplash()
                         activity.endGame()
                     }, GameActivity.ANIMATION_DELAY)
