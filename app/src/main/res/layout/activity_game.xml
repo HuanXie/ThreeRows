@@ -118,10 +118,5 @@
             android:textSize="@dimen/header_text_size"/>
     </LinearLayout>
 
-    <ViewStub
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/coverSplashContainer"
-        android:layout="@layout/cover_splash"
-        android:elevation="10dp"/>
+    <include layout="@layout/cover_splash" android:id="@+id/coverSplashLayout"/>
 </RelativeLayout>

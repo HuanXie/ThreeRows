@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.example.huaxie.threerows.adapters.BoardCellAdapter
 import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.android.synthetic.main.activity_game.coverSplashLayout
 import kotlinx.android.synthetic.main.cover_splash.*
 
 
@@ -135,20 +136,31 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+//    fun showCoverSplash(){
+//        coverSplashContainer?.let {
+//            it.visibility = View.VISIBLE
+//            coverSplashLayout?.apply {
+////                it.visibility = View.VISIBLE
+////                it.alpha = 0f
+////                startFadeInAnimator(it)
+//                playAgainButton?.setOnClickListener({
+////                    endGame()
+////                    startFadeOutAnimator(it)
+//                    this.visibility = View.GONE
+//                    coverSplashLayout.visibility = View.GONE
+//                    startGame()
+//                })
+//            }
+//        }
+//    }
+
     fun showCoverSplash(){
-        coverSplashContainer?.let {
+        coverSplashLayout.let {
             it.visibility = View.VISIBLE
-            coverSplashLayout?.apply {
-                it.visibility = View.VISIBLE
-                it.alpha = 0f
-                startFadeInAnimator(it)
-                playAgainButton?.setOnClickListener({
-                    endGame()
-//                    startFadeOutAnimator(it)
-                    this.visibility = View.GONE
-                    startGame()
-                })
-            }
+            playAgainButton?.setOnClickListener({
+                coverSplashLayout.visibility = View.GONE
+                startGame()
+            })
         }
     }
 
