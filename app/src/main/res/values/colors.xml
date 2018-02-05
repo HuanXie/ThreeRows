@@ -7,6 +7,6 @@
     <color name="white">#FFFFFF</color>
     <color name="gold">#FFD700</color>
 
-    <color name="piece_red">#F4606C</color>
+    <color name="piece_red">#FF4646</color>
     <color name="background">#508CC7B5</color>
 </resources>
